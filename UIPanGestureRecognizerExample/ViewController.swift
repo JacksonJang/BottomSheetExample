@@ -12,9 +12,18 @@ class ViewController: UIViewController {
         return view
     }()
     
+    let pullBar: PullBar = {
+        let view = PullBar()
+        
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
     let bottomSheetView: UIView = {
         let view = UIView()
         
+        view.layer.cornerRadius = 10
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .white
         
@@ -36,6 +45,7 @@ class ViewController: UIViewController {
     private func setupUI() {
         self.view.addSubview(dimView)
         self.view.addSubview(bottomSheetView)
+        self.view.addSubview(pullBar)
         
         setupConstraints()
     }
@@ -46,6 +56,11 @@ class ViewController: UIViewController {
             dimView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             dimView.topAnchor.constraint(equalTo: self.view.topAnchor),
             dimView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            
+            pullBar.bottomAnchor.constraint(equalTo: self.bottomSheetView.topAnchor),
+            pullBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            pullBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            pullBar.heightAnchor.constraint(equalToConstant: 20),
             
             bottomSheetView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             bottomSheetView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
@@ -116,3 +131,45 @@ class ViewController: UIViewController {
 
 }
 
+final class PullBar: UIView {
+    enum Style {
+        static let size = CGSize(width: 40, height: 4)
+    }
+
+    private let centerView: UIView = {
+        let view = UIView()
+        
+        view.backgroundColor = UIColor.white.withAlphaComponent(0.6)
+        view.layer.cornerRadius = Style.size.height * 0.5
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+
+    init() {
+        super.init(frame: .zero)
+
+        backgroundColor = .clear
+
+        setupUI()
+    }
+
+    required init?(coder: NSCoder) {
+        preconditionFailure("init(coder:) has not been implemented")
+    }
+
+    private func setupUI() {
+        self.addSubview(centerView)
+        
+        setupConstraints()
+    }
+    
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            centerView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            centerView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            centerView.widthAnchor.constraint(equalToConstant: Style.size.width),
+            centerView.heightAnchor.constraint(equalToConstant: Style.size.height)
+        ])
+    }
+}
